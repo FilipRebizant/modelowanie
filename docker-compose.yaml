@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:8
+    container_name: cinema_mysql8
+    environment:
+      - MYSQL_DATABASE=cinema
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=secret
+
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+
+  php-fpm:
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ./cinema:/var/www
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./cinema:/var/www/
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - "30002:80"
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: 'secret'
+    volumes:
+      - /sessions
+
+volumes:
+  - database
