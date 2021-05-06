@@ -9,6 +9,14 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">Home</a>
                     </li>
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('movie_index') }}">Movies</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('hall_index') }}">Halls</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
