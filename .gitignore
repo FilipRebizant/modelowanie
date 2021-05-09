@@ -1,4 +1,3 @@
 .idea
 logs/
-docker/.env
 docker/database/data
