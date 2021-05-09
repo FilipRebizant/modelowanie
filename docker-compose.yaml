@@ -4,8 +4,6 @@ services:
   database:
     image: mysql:8
     container_name: cinema_mysql8
-    volumes:
-      - ./docker/database/data:/var/lib/mysql
     restart: always
     environment:
       - MYSQL_DATABASE=cinema
@@ -49,3 +47,6 @@ services:
       MYSQL_ROOT_PASSWORD: 'secret'
     volumes:
       - /sessions
+
+volumes:
+  database:
