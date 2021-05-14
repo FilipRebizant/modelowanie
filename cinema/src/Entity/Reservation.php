@@ -18,8 +18,7 @@ class Reservation
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=200, nullable=true)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $reservationNumber;
 
@@ -29,14 +28,14 @@ class Reservation
     private $createTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="reservation_id")
-     */
-    private $client_id;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Hall::class, inversedBy="reservation_id")
      */
     private $hall_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="reservation_id")
+     */
+    private $client_id;
 
     public function getId(): ?int
     {
@@ -48,21 +47,9 @@ class Reservation
         return $this->reservationNumber;
     }
 
-    public function setReservationNumber(?string $reservationNumber): self
+    public function setReservationNumber(string $reservationNumber): self
     {
         $this->reservationNumber = $reservationNumber;
-
-        return $this;
-    }
-
-    public function getScreening(): ?Hall
-    {
-        return $this->screening;
-    }
-
-    public function setScreening(?Hall $screening): self
-    {
-        $this->screening = $screening;
 
         return $this;
     }
@@ -79,18 +66,6 @@ class Reservation
         return $this;
     }
 
-    public function getClientId(): ?Client
-    {
-        return $this->client_id;
-    }
-
-    public function setClientId(?Client $client_id): self
-    {
-        $this->client_id = $client_id;
-
-        return $this;
-    }
-
     public function getHallId(): ?Hall
     {
         return $this->hall_id;
@@ -99,6 +74,18 @@ class Reservation
     public function setHallId(?Hall $hall_id): self
     {
         $this->hall_id = $hall_id;
+
+        return $this;
+    }
+
+    public function getClientId(): ?Client
+    {
+        return $this->client_id;
+    }
+
+    public function setClientId(?Client $client_id): self
+    {
+        $this->client_id = $client_id;
 
         return $this;
     }
