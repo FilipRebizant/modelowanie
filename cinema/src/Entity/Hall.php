@@ -41,7 +41,6 @@ class Hall
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
         $this->reservation_id = new ArrayCollection();
     }
 
@@ -82,36 +81,6 @@ class Hall
     public function setHallNumber(int $hallNumber): self
     {
         $this->hallNumber = $hallNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Reservation[]
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations[] = $reservation;
-            $reservation->setScreening($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getScreening() === $this) {
-                $reservation->setScreening(null);
-            }
-        }
 
         return $this;
     }
