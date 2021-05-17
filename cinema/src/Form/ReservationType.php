@@ -13,9 +13,8 @@ class ReservationType extends AbstractType
     {
         $builder
             ->add('reservationNumber')
-            ->add('createTime')
-            ->add('client_id')
-            ->add('hall_id')
+            ->add('createdAt')
+            ->add('email')
         ;
     }
 

@@ -3,28 +3,61 @@
 {% block title %}Screening{% endblock %}
 
 {% block body %}
-    <h1>Screening</h1>
+    <div class="hall">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ screening.id }}</td>
-            </tr>
-            <tr>
-                <th>Start_date</th>
-                <td>{{ screening.startDate ? screening.startDate|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ screening.price }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <input type="hidden" value="{{ screening.getHall().getNumberOfRows() }}" id="rows_number">
+        <input type="hidden" value="{{ screening.getHall().getNumberOfSeats() }}" id="seats_number">
+        <input type="hidden" value="{{ path('reservations_get', {'id': screening.id}) }}" id="reservation_url">
+        <input type="hidden" value="{{ screening.id }}" id="screening_id">
 
-    <a href="{{ path('screening_index') }}">back to list</a>
+        <div class="alert hide"></div>
 
-    <a href="{{ path('screening_edit', {'id': screening.id}) }}">edit</a>
+        <h5 class="hall__number">Hall {{ screening.hall }}</h5>
 
-    {{ include('screening/_delete_form.html.twig') }}
+        <p> {{ screening.startDate ? screening.startDate|date('d.m.Y') : '' }}</p>
+        {% for movie in screening.movies %}
+
+            <h2 class="hall__movie_title">{{ movie.title }}</h2>
+            <p>Start at {{ screening.startDate ? screening.startDate|date('H:i') : '' }}</p>
+
+        {% endfor %}
+
+        <hr>
+
+        <div class="hall__screen">Screen</div>
+
+        <section id="seats_container" class="seats__container"></section>
+
+        <form id="reservation__form" class="hall__reservation_form" action="{{ path('reservation_new') }}" method="post">
+            <div class="col-md-6">
+                <div class="md-form hall__reservation_form__divider">
+                    <i class="fa fa-user prefix grey-text"></i>
+                    <input type="email" class="form-control" name="screening[email]" id="email">
+                    <label for="email">Email</label>
+                </div>
+
+                <button class="btn text-center btn-primary">Book a ticket</button>
+            </div>
+        </form>
+
+        <hr class="my-5">
+        <section class="hall__legend">
+
+            <h5 class="mb-3">Legenda</h5>
+            <ul class="hall__legend_list">
+                <li class="hall__legend_list__list_item hall__legend_list__list_item-free">
+                    <span class="hall__legend_list__list_item-free"></span>Free seats
+                </li>
+                <li class="hall__legend_list__list_item"><span class="hall__legend_list__list_item-booked"></span>Taken seets
+                </li>
+                <li class="hall__legend_list__list_item"><span class="hall__legend_list__list_item-active"></span>Currently booked seats
+                </li>
+            </ul>
+        </section>
+
+    </div><!-- hall-->
 {% endblock %}
+
+{#{% block javascripts %}#}
+{#    <script src="{{ asset('build/js/seats.js') }}"></script>#}
+{#{% endblock %}#}

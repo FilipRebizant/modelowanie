@@ -1,7 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Cinema{% endblock %}
 
 {% block body %}
-    <h1>Homepage</h1>
+
+    <section class="screening_schedule">
+
+        <!-- Section heading -->
+        <h1 class="h1-responsive font-weight-bold text-center my-5">Repertoire</h1>
+
+        <div class="tab">
+            {% for key, screening in screenings %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><strong>{{ key }}</strong></div>
+                <hr class="my-5">
+
+
+                <div class="panel-body">
+
+                    <div class="container">
+                        {% for movie in screening %}
+
+                                <!-- Grid row -->
+                                <div class="row">
+
+                                    <!-- Grid column -->
+                                    <div class="col-lg-5 col-xl-4">
+
+                                        <!-- Featured image -->
+                                        <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
+                                            <img class="img-fluid"
+                                                 src="https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg"
+                                                 alt="Sample image">
+                                            <a href="{{ path('movie_show', {'id': movie.id}) }}">
+                                                <div class="mask rgba-white-slight"></div>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <!-- Grid column -->
+
+                                    <!-- Grid column -->
+                                    <div class="col-lg-7 col-xl-8">
+
+                                        <h3 class="font-weight-bold mb-3"><strong>{{ movie.title }}</strong></h3>
+
+                                        <p class="dark-grey-text">{{ movie.description }}</p>
+
+                                        <p>Screenings</p>
+
+                                        {% for screen in movie.screenings %}
+                                            {% if screen.startDate|date('Y-m-d') == key %}
+                                                <a class="btn btn-primary"
+                                                   href="{{ path('screening_show', {'id': screen.id}) }}">{{ screen.startDate|date('H:i') }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Grid column -->
+
+                                </div>
+                                <!-- Grid row -->
+
+                                <hr class="my-5">
+
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--/.Panel 1-->
+
+
+            </div>
+        </div>
+
+    </section>
+
 {% endblock %}

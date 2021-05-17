@@ -69,14 +69,14 @@ class Screening
     }
 
     /**
-     * @return Collection|reservation[]
+     * @return Collection|Reservation[]
      */
     public function getReservations(): Collection
     {
         return $this->reservations;
     }
 
-    public function addReservation(reservation $reservation): self
+    public function addReservation(Reservation $reservation): self
     {
         if (!$this->reservations->contains($reservation)) {
             $this->reservations[] = $reservation;
@@ -86,7 +86,7 @@ class Screening
         return $this;
     }
 
-    public function removeReservation(reservation $reservation): self
+    public function removeReservation(Reservation $reservation): self
     {
         if ($this->reservations->removeElement($reservation)) {
             // set the owning side to null (unless already changed)

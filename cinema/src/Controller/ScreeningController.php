@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use App\Entity\Screening;
 use App\Form\ScreeningType;
 use App\Repository\ScreeningRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/screening')]
+#[Route('/screenings')]
 class ScreeningController extends AbstractController
 {
     #[Route('/', name: 'screening_index', methods: ['GET'])]
@@ -79,4 +81,34 @@ class ScreeningController extends AbstractController
 
         return $this->redirectToRoute('screening_index');
     }
+
+    /**
+     * @Route("/getReservations/{id}", name="reservations_get", methods="GET|POST")
+     */
+    public function getReservations($id): JsonResponse
+    {
+        $screeningRepository = $this->getDoctrine()->getRepository(Screening::class);
+        /** @var Screening $screening */
+        $screening = $screeningRepository->find($id);
+        $reservations = $screening->getReservations();
+//        dump($reservations);
+//        die;
+        $arr = array();
+
+        /**
+         * @var int $key
+         * @var Reservation $reservation
+         */
+        foreach ($reservations as $key => $reservation) {
+            array_push($arr, array(
+                'row'=> $reservation->getRow(),
+                'seat' => $reservation->getSeat()
+            ));
+        }
+
+        return new JsonResponse([
+            'current_reservations' => ($arr)
+        ], 200);
+    }
+
 }

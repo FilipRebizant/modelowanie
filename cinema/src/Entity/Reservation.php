@@ -25,17 +25,44 @@ class Reservation
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createTime;
+    private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Hall::class, inversedBy="reservation_id")
+     * @ORM\Column(type="integer")
      */
-    private $hall_id;
+    private $seat;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="reservation_id")
+     * @ORM\Column(type="integer", name="row_seat")
      */
-    private $client_id;
+    private $row;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Screening", inversedBy="reservations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $screening;
 
     public function getId(): ?int
     {
@@ -54,28 +81,20 @@ class Reservation
         return $this;
     }
 
-    public function getCreateTime(): ?\DateTimeInterface
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
     {
-        return $this->createTime;
+        return $this->createdAt;
     }
 
-    public function setCreateTime(\DateTimeInterface $createTime): self
+    /**
+     * @param mixed $createdAt
+     */
+    public function setCreatedAt($createdAt): void
     {
-        $this->createTime = $createTime;
-
-        return $this;
-    }
-
-    public function getHallId(): ?Hall
-    {
-        return $this->hall_id;
-    }
-
-    public function setHallId(?Hall $hall_id): self
-    {
-        $this->hall_id = $hall_id;
-
-        return $this;
+        $this->createdAt = $createdAt;
     }
 
     public function getClientId(): ?Client
@@ -89,4 +108,46 @@ class Reservation
 
         return $this;
     }
+
+    public function setSeat(int $seat): self
+    {
+        $this->seat = $seat;
+
+        return $this;
+    }
+
+    public function setRow(int $row): self
+    {
+        $this->row = $row;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
+    public function getSeat()
+    {
+        return $this->seat;
+    }
+
+    public function getRow()
+    {
+        return $this->row;
+    }
+
+    public function getScreening(): ?Screening
+    {
+        return $this->screening;
+    }
+
+    public function setScreening(?Screening $screening): self
+    {
+        $this->screening = $screening;
+
+        return $this;
+    }
+
 }

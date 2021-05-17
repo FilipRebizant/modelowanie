@@ -5,6 +5,8 @@
 {% block body %}
     <h1>Hall index</h1>
 
+    <a class="btn btn-primary" href="{{ path('hall_new') }}">Create new</a>
+
     <table class="table">
         <thead>
             <tr>
@@ -39,5 +41,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('hall_new') }}">Create new</a>
+
 {% endblock %}

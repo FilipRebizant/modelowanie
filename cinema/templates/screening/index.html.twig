@@ -5,6 +5,8 @@
 {% block body %}
     <h1>Screening index</h1>
 
+    <a class="btn btn-primary" href="{{ path('screening_new') }}">Create new</a>
+
     <table class="table">
         <thead>
             <tr>
@@ -21,8 +23,9 @@
                 <td>{{ screening.startDate ? screening.startDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ screening.price }}</td>
                 <td>
-                    <a href="{{ path('screening_show', {'id': screening.id}) }}">show</a>
-                    <a href="{{ path('screening_edit', {'id': screening.id}) }}">edit</a>
+                    <a class="btn btn-primary" href="{{ path('screening_show', {'id': screening.id}) }}">show</a>
+                    <a class="btn btn-primary" href="{{ path('screening_edit', {'id': screening.id}) }}">edit</a>
+                    {{ include('screening/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
@@ -33,5 +36,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('screening_new') }}">Create new</a>
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MovieRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass=MovieRepository::class)
@@ -36,6 +37,11 @@ class Movie
      * @ORM\Column(type="string", length=4, nullable=true)
      */
     private $productionYear;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Screening", mappedBy="movies", fetch="EXTRA_LAZY")
+     */
+    private $screenings;
 
     public function getId(): ?int
     {
@@ -88,5 +94,38 @@ class Movie
         $this->productionYear = $productionYear;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Screening[]
+     */
+    public function getScreenings(): Collection
+    {
+        return $this->screenings;
+    }
+
+    public function addScreening(Screening $screening): self
+    {
+        if (!$this->screenings->contains($screening)) {
+            $this->screenings[] = $screening;
+            $screening->addMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreening(Screening $screening): self
+    {
+        if ($this->screenings->contains($screening)) {
+            $this->screenings->removeElement($screening);
+            $screening->removeMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getTitle();
     }
 }
