@@ -131,6 +131,9 @@ $(document).ready(function () {
                     renderSeats();
                     $email.val("");
 
+                }).fail(function (response) {
+                    alert_container.addClass('alert-danger').html(response.responseJSON.error);
+                    alert_container.fadeIn().delay(3000).fadeOut();
                 });
                 this.reserved_seats = [];
             }
@@ -143,6 +146,11 @@ $(document).ready(function () {
 
             if (reserved_seats.length == 0) {
                 this.checkField('Please choose seats');
+                return;
+            }
+
+            if (reserved_seats.length > 4) {
+                this.checkField('Max number of seets per reservation is 4.');
                 return;
             }
 
