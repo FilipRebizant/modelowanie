@@ -19,6 +19,26 @@ class ScreeningRepository extends ServiceEntityRepository
         parent::__construct($registry, Screening::class);
     }
 
+    /**
+     * @return Screening[]
+     */
+    public function getClosestScreenings(): array
+    {
+        $currentDate = new \DateTime();
+        $from = new \DateTime($currentDate->format('Y-m-d H:i:s'));
+        $to = new \DateTime($currentDate->format('Y-m-d') . '23:59:59');
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.start_date BETWEEN :from AND :to')
+            ->setParameters([
+                'from' => $from,
+                'to' => $to,
+            ])
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Screening[] Returns an array of Screening objects
     //  */

@@ -4,6 +4,10 @@
 
 {% block body %}
 
+    <section>
+        {{ include('reservation/quick_reservation_component/index.html.twig') }}
+    </section>
+
     <section class="screening_schedule">
 
         <!-- Section heading -->
@@ -52,7 +56,7 @@
 
                                         {% for screen in movie.screenings %}
                                             {% if screen.startDate|date('Y-m-d') == key %}
-                                                <a class="btn btn-primary"
+                                                <a class="btn btn-primary {% if screen.startDate|date('Y-m-d H:i:s') < now %} disabled {% endif %}"
                                                    href="{{ path('screening_show', {'id': screen.id}) }}">{{ screen.startDate|date('H:i') }}</a>
                                             {% endif %}
                                         {% endfor %}

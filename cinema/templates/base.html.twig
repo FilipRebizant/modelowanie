@@ -12,7 +12,17 @@
 
     </head>
     <body>
+
         {% include 'navigation/index.html.twig' %}
+
+        {% for label, messages in app.flashes(['success', 'danger']) %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    <div class="text-center">{{ message }}</div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="container mt-5">
             {% block body %}{% endblock %}
         </div>

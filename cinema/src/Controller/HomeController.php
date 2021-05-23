@@ -7,42 +7,62 @@ use App\Entity\Movie;
 use App\Entity\Screening;
 use App\Repository\MovieRepository;
 use App\Repository\ScreeningRepository;
+use App\Service\ReservationService;
+use App\Service\ScreeningService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+    /** @var MovieRepository  */
+    private $movieRepository;
+
+    /**
+     * @var ScreeningRepository
+     */
+    private $screeningRepository;
+
+    public function __construct(MovieRepository $movieRepository, ScreeningRepository $screeningRepository)
+    {
+        $this->movieRepository = $movieRepository;
+        $this->screeningRepository = $screeningRepository;
+    }
+
     /**
      * @Route("/", name="homepage")
      */
-    public function index(
-        ScreeningRepository $screeningRepository,
-        MovieRepository $moviesRepository
-    ): Response
+    public function index(): Response
     {
-        $tempMovies = [];
-        $screenings = [];
-        $movieSchedule = $moviesRepository->getSchedule();
+        $screeningService = new ScreeningService($this->movieRepository);
+        $screenings = $screeningService->getCurrentScreenings();
+        $now = new \DateTime();
+        return $this->render('home/index.html.twig', [
+            'screenings' => $screenings,
+            'availableScreenings' => [],
+            'now' => $now->format('Y-m-d H:i:s'),
+        ]);
+    }
 
-        /** @var Movie $movie */
-        foreach ($movieSchedule as $movie) {
-            /** @var Screening $screening */
-            foreach ($movie->getScreenings() as $screening) {
+    #[Route('/new_quick', name: 'reservation_new_quick', methods: ['GET|POST'])]
+    public function newQuickReservation(Request $request): Response
+    {
+        $reservationService = new ReservationService($this->screeningRepository);
+        $availableScreenings = $reservationService->getAvailableScreenings($request);
 
-                if (array_key_exists($screening->getStartDate()->format('Y-m-d'), $screenings)) {
-                    if (!in_array($movie, $screenings[$screening->getStartDate()->format('Y-m-d')])) {
-                        $screenings[$screening->getStartDate()->format('Y-m-d')][] = $movie;
-                    }
-                } else {
-                    $screenings[$screening->getStartDate()->format('Y-m-d')][] = $movie;
-                }
-
-                array_push($tempMovies, $movie);
-            }
-
+        $screeningService = new ScreeningService($this->movieRepository);
+        $screenings = $screeningService->getCurrentScreenings();
+        $now = new \DateTime();
+        if (count($availableScreenings) === 0) {
+            $this->addFlash('danger', 'No available screenings for given criterias.');
         }
 
-        return $this->render('home/index.html.twig', ['screenings' => $screenings]);
+        return $this->render('home/index.html.twig', [
+            'screenings' => $screenings,
+            'availableScreenings' => $availableScreenings,
+            'now' => $now->format('Y-m-d H:i:s'),
+        ]);
     }
+
 }

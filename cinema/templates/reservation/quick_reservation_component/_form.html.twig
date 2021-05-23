@@ -1,0 +1,20 @@
+<form action="{{ path('reservation_new_quick') }}" method="post">
+    <fieldset>
+        <legend class="text-center">Book ticket faster</legend>
+        <div class="mb-3">
+            <label for="numberOfSeats" class="form-label">Number of seats</label>
+            <input name="number_of_required_seats" value="1" type="number" min="1" max="4" id="numberOfSeats" class="form-control" placeholder="Number of seats">
+        </div>
+        <div class="mb-3">
+            <label for="disabledSelect" class="form-label">Part of hall</label>
+            <select name="preferred_zone" id="disabledSelect" class="form-select">
+                <option value="0">Front</option>
+                <option value="1">Middle</option>
+                <option value="2">Back</option>
+            </select>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="text-center btn btn-primary">Get available screening</button>
+        </div>
+    </fieldset>
+</form>

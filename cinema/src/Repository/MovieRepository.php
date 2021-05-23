@@ -21,15 +21,21 @@ class MovieRepository extends ServiceEntityRepository
 
     public function getSchedule()
     {
-        $date = date('Y-m-d h:i:s', strtotime("+7 days"));
+        $today = new \DateTimeImmutable();
+        $nextWeek = $today->modify("+7 day");
 
-        return $this->createQueryBuilder('m')
+        $today = $today->format('Y-m-d H:i:s');
+        $nextWeek = $nextWeek->format('Y-m-d') . ' 23:59:59';
+
+        $res=  $this->createQueryBuilder('m')
             ->innerJoin('m.screenings', 's')
-            ->where('s.start_date BETWEEN :today AND :n30days')
-            ->setParameter('today', date('Y-m-d h:i:s'))
-            ->setParameter('n30days', $date)
+            ->where('s.start_date BETWEEN :today AND :nextWeek')
+            ->setParameter('today', $today)
+            ->setParameter('nextWeek', $nextWeek)
             ->orderBy('s.start_date', 'ASC')
             ->getQuery()
             ->getResult();
+        $test = 1;
+        return $res;
     }
 }

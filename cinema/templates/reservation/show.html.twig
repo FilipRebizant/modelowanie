@@ -3,26 +3,33 @@
 {% block title %}Reservation{% endblock %}
 
 {% block body %}
-    <h1>Reservation</h1>
+    <h1>Reservation number {{ reservation.reservationNumber }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ reservation.id }}</td>
+                <th>Screening starts at:</th>
+                <td>{{ reservation.screening.startDate|date('Y-m-d H:i') }}</td>
             </tr>
             <tr>
-                <th>ReservationNumber</th>
-                <td>{{ reservation.reservationNumber }}</td>
+                <th>Hall</th>
+                <td>{{ reservation.screening.hall }}</td>
             </tr>
             <tr>
-                <th>Created At</th>
-                <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Movie</th>
+                <td>{{ reservation.screening.movies[0] }}</td>
+            </tr>
+            <tr>
+                <th>Seats</th>
+                <td>
+                    <ul class="list-unstyled">
+                    {% for seat in seats %}
+                        <li>Row: {{ reservation.row }}, Seat: {{ seat }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('reservation_index') }}">back to list</a>
-
-    {{ include('reservation/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,0 +1,40 @@
+{% for element in availableScreenings %}
+
+
+{#    <p>Movie: {{ element.screening.movies[0] }}</p>#}
+    <hr>
+
+    <form action="{{ path('reservation_new') }}" method="post">
+        <fieldset class="d-flex justify-content-center align-items-center flex-column">
+            <legend class="text-center">{{ element.screening.movies[0] }}</legend>
+            <p>{{ element.screening.startDate|date('Y-m-d H:i') }}</p>
+            <p>Hall {{ element.screening.hall }}</p>
+            <div class="mb-3">
+                <b>Available spots:</b>
+                <div class="text-center">
+
+                    {% for key, spot in element.seatsToBeBooked %}
+                        <ul class="list-unstyled">
+                                <li class="">Seat: {{ spot.seat }}</li>
+                                <li class="">Row: {{ spot.row }}</li>
+                        </ul>
+                        <hr>
+                        <input name="seats[{{ key }}][seat]" type="hidden" id="seats" value="{{ spot.seat }}">
+                        <input name="seats[{{ key }}][row]" type="hidden" id="seats" value="{{ spot.row }}">
+                    {% endfor %}
+
+                </div>
+                {#                <label for="numberOfSeats" class="form-label">Number of seats</label>#}
+            </div>
+            <div class="mb-3">
+                <label for="disabledSelect" class="form-label">Email</label>
+                <input class="form-control" type="text" name="email">
+                <input type="hidden" name="id" value="{{ element.screening.id }}">
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="text-center btn btn-primary">Book seats</button>
+            </div>
+        </fieldset>
+    </form>
+
+{% endfor %}

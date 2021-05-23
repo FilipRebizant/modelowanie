@@ -24,6 +24,19 @@ services:
       - ./cinema:/var/www
     environment:
       PHP_EXTENSION_XDEBUG: 1
+      PHP_INI_XDEBUG__MODE: "debug"
+#      PHP_INI_XDEBUG__REMOTE_ENABLE: 1
+      PHP_INI_XDEBUG__CLIENT_PORT: 10000
+#      PHP_INI_XDEBUG__CLIENT_HOST: 'docker_modelowanie'
+      PHP_INI_XDEBUG__CLIENT_HOST: 'host.docker.internal'
+      PHP_INI_XDEBUG__IDE_KEY: 'PHPSTORM'
+#      PHP_INI_XDEBUG__START_WITH_REQUEST: 1
+#      XDEBUG_CONFIG: "remote_port=10000"
+#      PHP_IDE_CONFIG: "clientHost=docker_modelowanie"
+#      PHP_IDE_CONFIG: "PHPSTORM"
+    expose:
+      - "9003"
+      - '10000'
 
   nginx:
     image: nginx:stable
