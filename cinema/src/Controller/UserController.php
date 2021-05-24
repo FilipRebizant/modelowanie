@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-#[Route('/user')]
+#[Route('/users')]
 class UserController extends AbstractController
 {
     #[Route('/', name: 'user_index', methods: ['GET'])]
@@ -22,18 +24,34 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            try {
+                $plainPassword = $request->get('user')['password'];
+                $roles = $request->get('user')['roles'];
 
-            return $this->redirectToRoute('user_index');
+//            $user->setPassword();
+                $user->setPassword($passwordEncoder->encodePassword(
+                    $user,
+                    $plainPassword
+                ));
+                $user->setRoles($roles);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('user_index');
+
+            } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
+                $this->addFlash('danger', 'User with provided email already exists.');
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', 'Something went wrong, try again in a while');
+            }
         }
 
         return $this->render('user/new.html.twig', [

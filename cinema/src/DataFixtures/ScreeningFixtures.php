@@ -36,7 +36,7 @@ class ScreeningFixtures extends Fixture
             $screening->setHall($halls[mt_rand(0, count($halls) - 1)]);
             $screening->addMovie($movies[mt_rand(0, count($movies) - 1)]);
             $screening->setPrice(mt_rand(5, 20));
-            $date = new \DateTime(sprintf("$i days", random_int(0, 7)));
+            $date = new \DateTime(sprintf("%s days", random_int(0, 6)));
             $date->setTime(mt_rand(12, 20), '0');
             $screening->setStartDate($date);
 

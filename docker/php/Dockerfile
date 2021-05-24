@@ -10,5 +10,6 @@ COPY ./docker/php/entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 WORKDIR /var/www
 
+ENTRYPOINT ["/entrypoint.sh"]
 
 USER docker

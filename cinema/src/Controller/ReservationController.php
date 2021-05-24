@@ -11,6 +11,7 @@ use App\Service\ReservationService;
 use App\Validator\ReservationValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -74,8 +75,8 @@ class ReservationController extends AbstractController
             $reseravtion = $this->getDoctrine()
                 ->getRepository(Reservation::class)->findBy([], ['id'=> 'DESC'], 1);
             $reservationNumber = $reseravtion ?  $reseravtion[0]->getReservationNumber() + 1 : 1;
-//            $validator = new ReservationValidator();
-//            $validator->validate($request);
+            $validator = new ReservationValidator();
+            $validator->validate($request);
 
             $seats = $request->get('seats');
             $email = $request->get('email');
@@ -98,13 +99,18 @@ class ReservationController extends AbstractController
                 $em->persist($reservation);
                 $em->flush();
             }
-            $this->redirectToRoute('reservation_show', [
-                'reservation_number' => $reservationNumber,
-            ]);
-//            return new Response(['info' => 'Seats booked successfully'], 200);
+
         } catch (\Exception $exception) {
-            return new JsonResponse(['error' => $exception->getMessage()], 400);
+            $this->addFlash('danger', $exception->getMessage());
+            $this->redirectToRoute('homepage');
+            return new RedirectResponse('/');
         }
+
+        $this->addFlash('success', 'Reservation success');
+        return $this->redirectToRoute('reservation_show', [
+            'id' => $reservation->getId(),
+        ]);
+
     }
 
     #[Route('/{id}', name: 'reservation_show', methods: ['GET'])]

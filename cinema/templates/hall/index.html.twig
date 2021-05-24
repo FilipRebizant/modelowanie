@@ -10,20 +10,18 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>NumberOfRows</th>
-                <th>NumberOfSeats</th>
-                <th>HallNumber</th>
+                <th>Hall Number</th>
+                <th>Number Of Rows</th>
+                <th>Number Of Seats</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for hall in halls %}
             <tr>
-                <td>{{ hall.id }}</td>
+                <td>{{ hall.hallNumber }}</td>
                 <td>{{ hall.numberOfRows }}</td>
                 <td>{{ hall.numberOfSeats }}</td>
-                <td>{{ hall.hallNumber }}</td>
                 <td class="d-flex">
                     <a class="btn btn-primary" href="{{ path('hall_show', {'id': hall.id}) }}">show</a>
                     <a class="btn btn-primary" href="{{ path('hall_edit', {'id': hall.id}) }}">edit</a>
