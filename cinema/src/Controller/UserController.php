@@ -35,7 +35,6 @@ class UserController extends AbstractController
                 $plainPassword = $request->get('user')['password'];
                 $roles = $request->get('user')['roles'];
 
-//            $user->setPassword();
                 $user->setPassword($passwordEncoder->encodePassword(
                     $user,
                     $plainPassword
@@ -69,12 +68,22 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user): Response
+    public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all()['user'];
+            $plainPassword = $data['password'];
+            $roles = $data['roles'];
+            $user->setPassword($passwordEncoder->encodePassword(
+                $user,
+                $plainPassword
+            ));
+            $user->setEmail($data['email']);
+            $user->setLogin($data['login']);
+            $user->setRoles($roles);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('user_index');
