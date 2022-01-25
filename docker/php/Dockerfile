@@ -1,3 +1,4 @@
+ARG PHP_EXTENSIONS="mysqli pdo_mysql"
 FROM thecodingmachine/php:8.0-v4-fpm-node14
 USER root
 COPY ./docker/php/wait-for-it.sh /usr/bin/wait-for-it.sh
