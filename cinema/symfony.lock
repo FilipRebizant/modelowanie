@@ -133,11 +133,26 @@
     "nikic/php-parser": {
         "version": "v4.10.5"
     },
+    "nyholm/psr7": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "0cd4d2d0e7f646fda75f9944f747a56e6ed13d4c"
+        },
+        "files": [
+            "config/packages/nyholm_psr7.yaml"
+        ]
+    },
     "php-http/discovery": {
         "version": "1.14.1"
     },
     "php-http/httplug": {
         "version": "2.3.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
     },
     "php-http/promise": {
         "version": "1.1.0"

@@ -24,9 +24,13 @@ class MovieController extends AbstractController
     }
 
     #[Route('/elastic', name: 'movie_index', methods: ['GET'])]
-    public function elasticIndex(ElasticMovieRepository $movieRepository): Response
+    public function elasticIndex(ElasticMovieRepository $movieRepository, Request $request): Response
     {
-        return new JsonResponse($movieRepository->getMovies());
+        $movies = $movieRepository->getMovies(
+            $request->query->get('query') ?? '',
+            $request->query->get('filterBy')
+        );
+        return new JsonResponse($movies);
 //        return $this->render('movie/index.html.twig', [
 //            'movies' => $movieRepository->getMovies(),
 //        ]);
