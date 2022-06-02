@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Form\MovieType;
+use App\Repository\ElasticSearch\ElasticMovieRepository;
 use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,6 +21,19 @@ class MovieController extends AbstractController
         return $this->render('movie/index.html.twig', [
             'movies' => $movieRepository->findAll(),
         ]);
+    }
+
+    #[Route('/elastic', name: 'movie_index', methods: ['GET'])]
+    public function elasticIndex(ElasticMovieRepository $movieRepository, Request $request): Response
+    {
+        $movies = $movieRepository->getMovies(
+            $request->query->get('query') ?? '',
+            $request->query->get('filterBy')
+        );
+        return new JsonResponse($movies);
+//        return $this->render('movie/index.html.twig', [
+//            'movies' => $movieRepository->getMovies(),
+//        ]);
     }
 
     #[Route('/new', name: 'movie_new', methods: ['GET', 'POST'])]
